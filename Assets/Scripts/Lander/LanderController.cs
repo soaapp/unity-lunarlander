@@ -8,6 +8,10 @@ public class LanderController : MonoBehaviour
     private Rigidbody2D rb;
     private Vector2 lastVelocity;
 
+    // Explosion
+    public GameObject explosionPrefab; // Drag in your prefab from the editor
+
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -45,13 +49,14 @@ public class LanderController : MonoBehaviour
     
             Debug.Log($"Landing check: VSpeed={verticalSpeed}, HSpeed={horizontalSpeed}");
 
-            if (verticalSpeed < 1f && horizontalSpeed < 1f)
+            if (verticalSpeed < 2f && horizontalSpeed < 2f)
             {
                 Debug.Log("Successful Landing!");
             }
             else
             {
                 Debug.Log("CRASH! Speed too high!");
+                Explode();
             }
         }
         else
@@ -60,6 +65,11 @@ public class LanderController : MonoBehaviour
         }
     }
 
+    void Explode()
+    {
+        Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        Destroy(gameObject); // Remove the lander
+    }
 
 
 }
