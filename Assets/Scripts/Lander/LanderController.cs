@@ -6,6 +6,7 @@ public class LanderController : MonoBehaviour
     public float rotationSpeed = 100f;
 
     private Rigidbody2D rb;
+    private Vector2 lastVelocity;
 
     void Start()
     {
@@ -14,6 +15,7 @@ public class LanderController : MonoBehaviour
 
     void Update()
     {
+        lastVelocity = rb.linearVelocity;
         // Rotate left
         if (Input.GetKey(KeyCode.LeftArrow))
         {
@@ -33,4 +35,31 @@ public class LanderController : MonoBehaviour
             rb.AddForce(transform.up * thrustPower, ForceMode2D.Force);
         }
     }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("LandingZone"))
+        {
+            float verticalSpeed = Mathf.Abs(lastVelocity.y);
+            float horizontalSpeed = Mathf.Abs(lastVelocity.x);
+    
+            Debug.Log($"Landing check: VSpeed={verticalSpeed}, HSpeed={horizontalSpeed}");
+
+            if (verticalSpeed < 1f && horizontalSpeed < 1f)
+            {
+                Debug.Log("Successful Landing!");
+            }
+            else
+            {
+                Debug.Log("CRASH! Speed too high!");
+            }
+        }
+        else
+        {
+            Debug.Log("Crashed into terrain!");
+        }
+    }
+
+
+
 }
